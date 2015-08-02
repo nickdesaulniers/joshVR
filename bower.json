@@ -1,0 +1,19 @@
+{
+  "name": "joshVR",
+  "version": "0.0.0",
+  "authors": [
+    "Nick Desaulniers <ndesaulniers@mozilla.com>"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "codemirror": "~5.5.0",
+    "three.js": "~0.71.0",
+    "dat.gui": "*"
+  }
+}
