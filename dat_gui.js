@@ -9,18 +9,23 @@ function buildUI (cube) {
   return gui;
 };
 
+// the order is: 1. display name in dat.gui, 2. property for three.js,
+// 3. property for three.jsi, 4. min for dat.gui, 5. max for dat.gui
 function getPropertiesFromAttrName (attrName) {
-  if (attrName === 'scaleX') {
-    return ['scale', 'scale', 'x'];
-  } else if (attrName === 'translateX') {
-    return ['translate', 'position', 'x'];
+  if (attrName.startsWith('scale')) {
+    return ['scale', 'scale', attrName.slice(-1).toLowerCase(), 0, 10];
+  } else if (attrName.startsWith('translate')) {
+    return ['translate', 'position', attrName.slice(-1).toLowerCase(), -4, 4];
   } else {
     return [];
   }
 };
 
+function setDefaultValue (mesh, props, value) {
+  mesh[props[1]][props[2]] = value;
+};
 function addControls (gui, mesh, props) {
-  gui.add(mesh[props[1]], props[2], 0, 10);
+  gui.add(mesh[props[1]], props[2], props[3], props[4]);
 };
 
 function addTransforms (gui, tag, mesh) {
@@ -31,8 +36,11 @@ function addTransforms (gui, tag, mesh) {
     var props = getPropertiesFromAttrName(tag.attributes[i].name);
     ////scaleFolder.add(cube.scale, 'x', 0, 10);
     if (props.length > 1) {
-      gui = gui.addFolder(props[0]);
-      addControls(gui, mesh, props);
+      var folder = gui.addFolder(props[0]);
+      // order of setDefaultVale and addControls is important
+      // cast to double important
+      setDefaultValue(mesh, props, +tag.attributes[i].value);
+      addControls(folder, mesh, props);
     }
   }
 };

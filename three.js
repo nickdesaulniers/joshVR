@@ -1,3 +1,4 @@
+// https://github.com/mrdoob/three.js/blob/master/examples/canvas_geometry_hierarchy.html#L57-L73
 function initScene () {
   var canvas = document.createElement('canvas');
   canvas.width = canvas.height = 400;
@@ -42,7 +43,7 @@ function addToScene (scene, type) {
   }
   var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
   var mesh = new THREE.Mesh(geometry, material);
-  if (type === 'sphere') mesh.position.x = 1.0; //
+  //if (type === 'sphere') mesh.position.x = 1.0; //
   scene.add(mesh);
   return mesh;
 };
