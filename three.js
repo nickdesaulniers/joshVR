@@ -33,6 +33,7 @@ function initScene () {
 };
 
 function addToScene (scene, type) {
+  //console.log('addToScene', scene);
   var geometry;
   if (type === 'cube') {
     geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -48,8 +49,13 @@ function addToScene (scene, type) {
   return mesh;
 };
 
+function createGroup () {
+  return new THREE.Group();
+};
+
 module.exports = {
   initScene: initScene,
   addToScene: addToScene,
+  createGroup: createGroup,
 };
 

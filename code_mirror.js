@@ -1,6 +1,6 @@
 var defaultText = [
   '<scene>',
-  '  <group>',
+  '  <group translateY="1.0">',
   '    <cube scaleX="2.75" translateY="1.0"/>',
   '    <sphere translateX="1.0"/>',
   '    <sphere translateX="-1.0"/>',

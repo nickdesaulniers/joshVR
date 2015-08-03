@@ -3,11 +3,7 @@
 ////name.addColor({ color: '#F00' }, 'color');
 ////gui.add({ message: '', }, 'message');
 // http://workshop.chromeexperiments.com/examples/gui/#10--Updating-the-Display-Manually
-function buildUI (cube) {
-  var gui = new dat.GUI();
-  window.gui = gui;
-  return gui;
-};
+function buildUI () { return new dat.GUI(); };
 
 // the order is: 1. display name in dat.gui, 2. property for three.js,
 // 3. property for three.jsi, 4. min for dat.gui, 5. max for dat.gui

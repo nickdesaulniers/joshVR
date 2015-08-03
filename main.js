@@ -10,10 +10,12 @@ function rebuild () {
   var d = parser.parseFromString(content, 'application/xml');
   // Start descent from the scene tag, not the XMLDocument parent
   if (!d.children.length) throw new Error('no child nodes');
-  var scene = recursiveDescend(d.children[0], null, null);
+  var rsc = rend.initScene();
+  var gui = ui.buildUI();
+  recursiveDescend(d.children[0], rsc.scene, gui);
   (function render () {
     requestAnimationFrame(render);
-    scene.renderer.render(scene.scene, scene.camera);
+    rsc.renderer.render(rsc.scene, rsc.camera);
   })();
 };
 
@@ -21,25 +23,26 @@ function rebuild () {
 var counter = 0;
 function recursiveDescend (node, scene, gui) {
    //console.log(node, node.tagName);
-   if (node.tagName === 'scene') {
-     scene = rend.initScene();
-     gui = ui.buildUI(null);
-   } else if (node.tagName === 'cube') {
-     var mesh = rend.addToScene(scene.scene, 'cube');
+   if (node.tagName === 'cube') {
+     var mesh = rend.addToScene(scene, 'cube');
      gui = gui.addFolder('cube' + counter++);
      ui.addTransforms(gui, node, mesh);
    } else if (node.tagName === 'sphere') {
-     var mesh = rend.addToScene(scene.scene, 'sphere');
+     var mesh = rend.addToScene(scene, 'sphere');
      gui = gui.addFolder('sphere' + counter++);
      ui.addTransforms(gui, node, mesh);
    } else if (node.tagName === 'group') {
+     var mesh = rend.createGroup();
+     scene.add(mesh);
+     scene = mesh;
      gui = gui.addFolder('group' + counter++);
+     ui.addTransforms(gui, node, mesh);
    }
    for (var i = 0, len = node.children.length; i < len; ++i) {
      //console.log(node.children[i]);
      recursiveDescend(node.children[i], scene, gui);
    }
-   if (scene) return scene;
+   return scene;
 };
 
 doc.on('update', debounce(rebuild, 1000));
