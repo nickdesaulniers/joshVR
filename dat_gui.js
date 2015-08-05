@@ -1,3 +1,4 @@
+var MeshProxy = require('./mesh_proxy');
 //var name = gui.addFolder('Name');
 ////name.add({ plunks: 0 }, 'plunks');
 ////name.addColor({ color: '#F00' }, 'color');
@@ -12,6 +13,8 @@ function getPropertiesFromAttrName (attrName) {
     return ['scale', 'scale', attrName.slice(-1).toLowerCase(), 0, 10];
   } else if (attrName.startsWith('translate')) {
     return ['translate', 'position', attrName.slice(-1).toLowerCase(), -4, 4];
+  } else if (attrName.startsWith('rotate')) {
+    return ['rotate', 'rotation', attrName.slice(-1).toLowerCase(), -Math.PI, Math.PI];
   } else {
     return [];
   }
@@ -36,7 +39,8 @@ function addTransforms (gui, tag, mesh) {
       // order of setDefaultVale and addControls is important
       // cast to double important
       setDefaultValue(mesh, props, +tag.attributes[i].value);
-      addControls(folder, mesh, props);
+      //addControls(folder, mesh, props);
+      addControls(folder, new MeshProxy(mesh), props);
     }
   }
 };
