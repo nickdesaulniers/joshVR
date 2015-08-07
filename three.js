@@ -12,6 +12,11 @@ function initScene () {
   var renderer = new THREE.WebGLRenderer({ canvas: canvas });
   renderer.setSize(canvas.width, canvas.height);
 
+  scene.add(new THREE.AmbientLight(0xBBBBBB));
+  var light = new THREE.PointLight(0xFFFFFF, 1, 100);
+  light.position.set(50, 50, 50);
+  scene.add(light);
+
   // Floor
   var floor = new THREE.CircleGeometry(100, 16);
   floor.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
@@ -42,7 +47,7 @@ function addToScene (scene, type) {
   } else {
     throw new Error('unrecognized type');
   }
-  var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+  var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
   var mesh = new THREE.Mesh(geometry, material);
   //if (type === 'sphere') mesh.position.x = 1.0; //
   scene.add(mesh);
