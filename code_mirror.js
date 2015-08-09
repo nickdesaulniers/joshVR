@@ -15,11 +15,19 @@ var doc = CodeMirror(div, {
   lineNumbers: true,
   mode: 'xml',
   value: defaultText,
-  theme: 'solarized dark',
+  theme: 'monokai',
 });
 window.doc = doc; //
 // we'll use doc.replaceRange("hi", CodeMirror.Pos(1, 5), CodeMirror.Pos(1, 7))
 
+var serializer = new XMLSerializer;
+function writeBack (xmlDocument) {
+  console.log('writeback!', xmlDocument);
+  doc.setValue(serializer.serializeToString(xmlDocument));
+};
+
 module.exports = {
   doc: doc,
+  writeBack: writeBack,
 };
+

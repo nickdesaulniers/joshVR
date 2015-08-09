@@ -1,9 +1,3 @@
-var MeshProxy = require('./mesh_proxy');
-//var name = gui.addFolder('Name');
-////name.add({ plunks: 0 }, 'plunks');
-////name.addColor({ color: '#F00' }, 'color');
-////gui.add({ message: '', }, 'message');
-// http://workshop.chromeexperiments.com/examples/gui/#10--Updating-the-Display-Manually
 function buildUI () { return new dat.GUI(); };
 
 // the order is: 1. display name in dat.gui, 2. property for three.js,
@@ -23,24 +17,24 @@ function getPropertiesFromAttrName (attrName) {
 function setDefaultValue (mesh, props, value) {
   mesh[props[1]][props[2]] = value;
 };
-function addControls (gui, mesh, props) {
-  gui.add(mesh[props[1]], props[2], props[3], props[4]);
+
+function addControls (gui, mesh, props, writeBack) {
+  var c = gui.add(mesh[props[1]], props[2], props[3], props[4]);
+  c.onFinishChange(function (value) {
+    mesh.node.setAttribute(props[0] + props[2].toUpperCase(), value.toFixed(2));
+    writeBack();
+  });
 };
 
-function addTransforms (gui, tag, mesh) {
-  //console.log(tag, mesh);
-  //console.log(tag.attributes, tag.getAttribute);
+function addTransforms (gui, tag, mesh, writeBack) {
   for (var i = 0, len = tag.attributes.length; i < len; ++i) {
-    //console.log(tag.tagName, tag.attributes[i].name, tag.attributes[i].value);
     var props = getPropertiesFromAttrName(tag.attributes[i].name);
-    ////scaleFolder.add(cube.scale, 'x', 0, 10);
     if (props.length > 1) {
       var folder = gui.addFolder(props[0]);
       // order of setDefaultVale and addControls is important
       // cast to double important
       setDefaultValue(mesh, props, +tag.attributes[i].value);
-      //addControls(folder, mesh, props);
-      addControls(folder, new MeshProxy(mesh), props);
+      addControls(folder, mesh, props, writeBack);
     }
   }
 };

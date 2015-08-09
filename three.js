@@ -8,7 +8,6 @@ function initScene () {
   var camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
   camera.position.z = 5;
   camera.position.y = 1;
-  //camera.lookAt(0, 0, 0);
   var renderer = new THREE.WebGLRenderer({ canvas: canvas });
   renderer.setSize(canvas.width, canvas.height);
 
@@ -29,7 +28,6 @@ function initScene () {
   var floorObj = new THREE.Mesh(floor, material2);
   //floorObj.receiveShadow = true;
   scene.add(floorObj);
-  //console.log(scene);
   return {
     renderer: renderer,
     scene: scene,
@@ -37,25 +35,27 @@ function initScene () {
   };
 };
 
-function addToScene (scene, type) {
-  //console.log('addToScene', scene);
+function addToScene (scene, node) {
   var geometry;
-  if (type === 'cube') {
+  if (node.tagName === 'cube') {
     geometry = new THREE.BoxGeometry(1, 1, 1);
-  } else if (type === 'sphere') {
+  } else if (node.tagName === 'sphere') {
     geometry = new THREE.SphereGeometry(0.5);
   } else {
     throw new Error('unrecognized type');
   }
   var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
   var mesh = new THREE.Mesh(geometry, material);
-  //if (type === 'sphere') mesh.position.x = 1.0; //
+  mesh.node = node;
   scene.add(mesh);
   return mesh;
 };
 
-function createGroup () {
-  return new THREE.Group();
+function createGroup (scene, node) {
+  var group = new THREE.Group();
+  group.node = node;
+  scene.add(group);
+  return group;
 };
 
 module.exports = {
