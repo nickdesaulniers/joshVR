@@ -2,7 +2,7 @@
 function initScene () {
   var canvas = document.createElement('canvas');
   canvas.width = canvas.height = 400;
-  canvas.style.border = '1px dashed blue';
+  canvas.style.verticalAlign = 'top';
   document.body.appendChild(canvas);
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);

@@ -70,4 +70,5 @@ function recursiveDescend (node, scene, gui) {
 mirror.doc.on('update', debounce(rebuild, 1000));
 mirror.doc.focus();
 rebuild();
+document.body.style.margin = 0;
 
