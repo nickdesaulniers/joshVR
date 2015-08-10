@@ -1,14 +1,16 @@
+var renderer, scene, camera, canvas;
 // https://github.com/mrdoob/three.js/blob/master/examples/canvas_geometry_hierarchy.html#L57-L73
 function initScene () {
-  var canvas = document.createElement('canvas');
-  canvas.width = canvas.height = 400;
+  canvas = document.createElement('canvas');
+  canvas.width = window.innerWidth * 0.5;
+  canvas.height = window.innerHeight;
   canvas.style.verticalAlign = 'top';
   document.body.appendChild(canvas);
-  var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
   camera.position.z = 5;
   camera.position.y = 1;
-  var renderer = new THREE.WebGLRenderer({ canvas: canvas });
+  renderer = new THREE.WebGLRenderer({ canvas: canvas });
   renderer.setSize(canvas.width, canvas.height);
 
   scene.add(new THREE.AmbientLight(0xBBBBBB));
@@ -28,11 +30,7 @@ function initScene () {
   var floorObj = new THREE.Mesh(floor, material2);
   //floorObj.receiveShadow = true;
   scene.add(floorObj);
-  return {
-    renderer: renderer,
-    scene: scene,
-    camera: camera,
-  };
+  return scene;
 };
 
 function addToScene (scene, node) {
@@ -58,9 +56,14 @@ function createGroup (scene, node) {
   return group;
 };
 
+function render () { renderer.render(scene, camera); };
+function destroy () { if (canvas) canvas.remove(); };
+
 module.exports = {
   initScene: initScene,
   addToScene: addToScene,
   createGroup: createGroup,
+  render: render,
+  destroy: destroy,
 };
 

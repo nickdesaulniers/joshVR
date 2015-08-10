@@ -22,27 +22,25 @@ function rebuild () {
   if (!ctx.doc.children.length) throw new Error('no child nodes');
   // TODO: this could be nicer
   mirror.cb = mirror.writeBack(ctx.doc);
-  ctx.rsc = rend.initScene();
+  var scene = rend.initScene();
   ctx.gui = ui.buildUI();
-  recursiveDescend(ctx.doc.children[0], ctx.rsc.scene, ctx.gui);
+  recursiveDescend(ctx.doc.children[0], scene, ctx.gui);
   (function render () {
     ctx.raf = requestAnimationFrame(render);
-    ctx.rsc.renderer.render(ctx.rsc.scene, ctx.rsc.camera);
+    rend.render();
   })();
 };
 
 function destroyCtx () {
   counter = 0;
-  if (ctx.rsc) {
-    document.getElementsByTagName('canvas')[0].remove();
-    ctx.rsc = null;
-  }
+  rend.destroy();
   if (ctx.gui) {
     ctx.gui.destroy();
     ctx.gui = null;
   }
-  if (ctx.rsc) {
-    ctx.rsc = null;
+  if (ctx.raf) {
+    cancelAnimationFrame(ctx.raf);
+    ctx.raf = null;
   }
 };
 

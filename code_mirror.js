@@ -3,6 +3,7 @@ function divSoup () {
   var d2 = document.createElement('div');
   d1.style.width = '50%';
   d1.style.display = 'inline-block';
+  d2.style.height = window.innerHeight + 'px';
   document.body.appendChild(d1);
   d1.appendChild(d2);
   return d2;
