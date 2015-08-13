@@ -2,10 +2,10 @@ var renderer, scene, camera, canvas;
 // https://github.com/mrdoob/three.js/blob/master/examples/canvas_geometry_hierarchy.html#L57-L73
 function initScene () {
   canvas = document.createElement('canvas');
-  canvas.width = window.innerWidth * 0.5;
   canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth * 0.5;
   canvas.style.verticalAlign = 'top';
-  document.body.appendChild(canvas);
+  document.getElementById('rightColumn').appendChild(canvas);
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
   camera.position.z = 5;
@@ -59,11 +59,20 @@ function createGroup (scene, node) {
 function render () { renderer.render(scene, camera); };
 function destroy () { if (canvas) canvas.remove(); };
 
+// TODO: dirty hack, remove
+function fixUpCanvas () {
+  var rect = canvas.parentNode.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+  renderer.setSize(canvas.width, canvas.height);
+};
+
 module.exports = {
   initScene: initScene,
   addToScene: addToScene,
   createGroup: createGroup,
   render: render,
   destroy: destroy,
+  fixUpCanvas: fixUpCanvas,
 };
 

@@ -5,15 +5,29 @@
     <link href="bower_components/codemirror/lib/codemirror.css" rel="stylesheet"/>
     <link href="bower_components/codemirror/theme/monokai.css" rel="stylesheet"/>
     <style>
-      body {
+      /*body {
         overflow-y: hidden;
+      }*/
+      html, body, .flex, #leftColumn {
+        height: 100%;
       }
       .CodeMirror {
         height: 100%;
       }
+      .flex {
+        display: flex;
+      }
+      .flex > div {
+        flex: 1;
+        overflow: hidden;
+      }
     </style>
   </head>
   <body>
+    <div class="flex">
+      <div id="leftColumn"></div>
+      <div id="rightColumn"></div>
+    </div>
     <script src="bower_components/codemirror/lib/codemirror.js"></script>
     <script src="bower_components/codemirror/mode/xml/xml.js"></script>
     <script src="bower_components/dat.gui/dat.gui.min.js"></script>

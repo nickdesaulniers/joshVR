@@ -1,14 +1,3 @@
-function divSoup () {
-  var d1 = document.createElement('div');
-  var d2 = document.createElement('div');
-  d1.style.width = '50%';
-  d1.style.display = 'inline-block';
-  d2.style.height = window.innerHeight + 'px';
-  document.body.appendChild(d1);
-  d1.appendChild(d2);
-  return d2;
-};
-
 var defaultText = [
   '<scene>',
   '  <group translateY="1.0" rotateY="0.78">',
@@ -19,7 +8,7 @@ var defaultText = [
   '</scene>'
 ].join('\n');
 
-var doc = CodeMirror(divSoup(), {
+var doc = CodeMirror(document.getElementById('leftColumn'), {
   lineNumbers: true,
   mode: 'xml',
   value: defaultText,

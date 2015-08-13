@@ -29,6 +29,9 @@ function rebuild () {
     ctx.raf = requestAnimationFrame(render);
     rend.render();
   })();
+  setTimeout(function () {
+    rend.fixUpCanvas();
+  }, 0);
 };
 
 function destroyCtx () {
