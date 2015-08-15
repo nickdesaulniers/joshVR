@@ -1,7 +1,7 @@
 // watchify main.js -o dist.js -v -d
-var mirror = require('./code_mirror');
-var rend = require('./three.js');
-var ui = require('./dat_gui');
+var mirror = require('./editor');
+var rend = require('./renderer.js');
+var ui = require('./controls');
 var debounce = require('debounce');
 
 var parser = new DOMParser;

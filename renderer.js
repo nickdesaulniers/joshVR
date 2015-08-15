@@ -1,7 +1,18 @@
 var renderer, scene, camera, canvas, vrEffect, vrControls;
 var cameraPosition = new THREE.Vector3(0, 1, 5);
-// https://github.com/mrdoob/three.js/blob/master/examples/canvas_geometry_hierarchy.html#L57-L73
+
 function initScene () {
+  initCanvas();
+  scene = new THREE.Scene();
+  initCamera(canvas);
+  initRenderer(canvas);
+  initVR(renderer, camera);
+  initLights(scene);
+  initFloor(scene);
+  return scene;
+};
+
+function initCanvas () {
   canvas = document.createElement('canvas');
   canvas.height = window.innerHeight;
   canvas.width = window.innerWidth * 0.5;
@@ -9,33 +20,42 @@ function initScene () {
   canvas.addEventListener('click', enterFullscreen);
   document.addEventListener('mozfullscreenchange', exitFullscreen);
   document.getElementById('rightColumn').appendChild(canvas);
-  scene = new THREE.Scene();
+};
+
+function initCamera (canvas) {
   camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
   resetCamera(camera);
+};
+
+function initRenderer (canvas) {
   renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
   renderer.setSize(canvas.width, canvas.height);
   renderer.setPixelRatio(window.devicePixelRatio);
+};
+
+function initVR (renderer, camera) {
   vrEffect = new THREE.VREffect(renderer, alert);
   vrControls = new THREE.VRControls(camera);
+};
 
+function initLights (scene) {
   scene.add(new THREE.AmbientLight(0xBBBBBB));
   var light = new THREE.PointLight(0xFFFFFF, 1, 100);
   light.position.set(50, 50, 50);
   scene.add(light);
+};
 
-  // Floor
-  var floor = new THREE.CircleGeometry(100, 16);
-  floor.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+function initFloor () {
+  var geometry = new THREE.CircleGeometry(100, 16);
+  geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
   var texture = THREE.ImageUtils.loadTexture('checkerboard.png');
   texture.repeat.set(100, 100);
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   var material = new THREE.MeshBasicMaterial({
     map: texture,
   });
-  var floorObj = new THREE.Mesh(floor, material);
-  //floorObj.receiveShadow = true;
-  scene.add(floorObj);
-  return scene;
+  var mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
 };
 
 function addToScene (scene, node) {
