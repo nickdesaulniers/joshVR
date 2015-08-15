@@ -1,4 +1,5 @@
-var renderer, scene, camera, canvas, vrEffect;
+var renderer, scene, camera, canvas, vrEffect, vrControls;
+var cameraPosition = new THREE.Vector3(0, 1, 5);
 // https://github.com/mrdoob/three.js/blob/master/examples/canvas_geometry_hierarchy.html#L57-L73
 function initScene () {
   canvas = document.createElement('canvas');
@@ -10,12 +11,12 @@ function initScene () {
   document.getElementById('rightColumn').appendChild(canvas);
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
-  camera.position.z = 5;
-  camera.position.y = 1;
+  resetCamera(camera);
   renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
   renderer.setSize(canvas.width, canvas.height);
   renderer.setPixelRatio(window.devicePixelRatio);
   vrEffect = new THREE.VREffect(renderer, alert);
+  vrControls = new THREE.VRControls(camera);
 
   scene.add(new THREE.AmbientLight(0xBBBBBB));
   var light = new THREE.PointLight(0xFFFFFF, 1, 100);
@@ -63,6 +64,8 @@ function createGroup (scene, node) {
 var safeToRenderStereo = false;
 function render () {
   if (safeToRenderStereo) {
+    vrControls.update();
+    adjustCamera(camera);
     vrEffect.render(scene, camera);
   } else {
     renderer.render(scene, camera);
@@ -73,6 +76,7 @@ function destroy () { if (canvas) canvas.remove(); };
 function isFullscreen () { return !!document.mozFullScreenElement; };
 
 function enterFullscreen () {
+  if (isFullscreen()) return;
   vrEffect.setFullScreen(true);
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -81,11 +85,25 @@ function enterFullscreen () {
 };
 
 function exitFullscreen () {
-  if (!isFullscreen()) {
-    fixUpCanvas();
-    camera.aspect = canvas.width / canvas.height;
-    camera.updateProjectionMatrix();
-    safeToRenderStereo = false;
+  if (isFullscreen()) return;
+  fixUpCanvas();
+  resetCamera(camera);
+  safeToRenderStereo = false;
+};
+
+function resetCamera (camera) {
+  camera.position.copy(cameraPosition);
+  camera.quaternion.set(0, 0, 0, 1);
+  camera.aspect = canvas.width / canvas.height;
+  camera.updateProjectionMatrix();
+};
+
+// This will adjust the camera back since VRControls will copy position
+// data from the Position Sensor. This adjustment is not needed if the user
+// entered fullscreen without info from the Position Sensor.
+function adjustCamera (camera) {
+  if (camera.position.z < 4.0) {
+    camera.position.add(cameraPosition);
   }
 };
 
