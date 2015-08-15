@@ -5,11 +5,9 @@
     <link href="bower_components/codemirror/lib/codemirror.css" rel="stylesheet"/>
     <link href="bower_components/codemirror/theme/monokai.css" rel="stylesheet"/>
     <style>
-      /*body {
-        overflow-y: hidden;
-      }*/
       html, body, .flex, #leftColumn {
         height: 100%;
+        margin: 0;
       }
       .CodeMirror {
         height: 100%;
@@ -21,6 +19,9 @@
         flex: 1;
         overflow: hidden;
       }
+      canvas {
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -31,7 +32,9 @@
     <script src="bower_components/codemirror/lib/codemirror.js"></script>
     <script src="bower_components/codemirror/mode/xml/xml.js"></script>
     <script src="bower_components/dat.gui/dat.gui.min.js"></script>
-    <script src="bower_components/three.js/three.min.js"></script>
+    <script src="lib/three.js/build/three.min.js"></script>
+    <script src="lib/three.js/examples/js/effects/VRControls.js"></script>
+    <script src="lib/three.js/examples/js/effects/VREffect.js"></script>
     <script src="dist.js"></script>
   </body>
 </html>

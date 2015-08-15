@@ -13,7 +13,6 @@
   ],
   "dependencies": {
     "codemirror": "~5.5.0",
-    "three.js": "~0.71.0",
     "dat.gui": "*"
   }
 }

@@ -30,6 +30,7 @@ function addTransforms (gui, tag, mesh, writeBack) {
   for (var i = 0, len = tag.attributes.length; i < len; ++i) {
     var props = getPropertiesFromAttrName(tag.attributes[i].name);
     if (props.length > 1) {
+      // TODO: don't addFolder if one already exists!
       var folder = gui.addFolder(props[0]);
       // order of setDefaultVale and addControls is important
       // cast to double important

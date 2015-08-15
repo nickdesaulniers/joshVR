@@ -1,17 +1,21 @@
-var renderer, scene, camera, canvas;
+var renderer, scene, camera, canvas, vrEffect;
 // https://github.com/mrdoob/three.js/blob/master/examples/canvas_geometry_hierarchy.html#L57-L73
 function initScene () {
   canvas = document.createElement('canvas');
   canvas.height = window.innerHeight;
   canvas.width = window.innerWidth * 0.5;
   canvas.style.verticalAlign = 'top';
+  canvas.addEventListener('click', enterFullscreen);
+  document.addEventListener('mozfullscreenchange', exitFullscreen);
   document.getElementById('rightColumn').appendChild(canvas);
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
   camera.position.z = 5;
   camera.position.y = 1;
-  renderer = new THREE.WebGLRenderer({ canvas: canvas });
+  renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
   renderer.setSize(canvas.width, canvas.height);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  vrEffect = new THREE.VREffect(renderer, alert);
 
   scene.add(new THREE.AmbientLight(0xBBBBBB));
   var light = new THREE.PointLight(0xFFFFFF, 1, 100);
@@ -24,10 +28,10 @@ function initScene () {
   var texture = THREE.ImageUtils.loadTexture('checkerboard.png');
   texture.repeat.set(100, 100);
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-  var material2 = new THREE.MeshBasicMaterial({
+  var material = new THREE.MeshBasicMaterial({
     map: texture,
   });
-  var floorObj = new THREE.Mesh(floor, material2);
+  var floorObj = new THREE.Mesh(floor, material);
   //floorObj.receiveShadow = true;
   scene.add(floorObj);
   return scene;
@@ -56,8 +60,34 @@ function createGroup (scene, node) {
   return group;
 };
 
-function render () { renderer.render(scene, camera); };
+var safeToRenderStereo = false;
+function render () {
+  if (safeToRenderStereo) {
+    vrEffect.render(scene, camera);
+  } else {
+    renderer.render(scene, camera);
+  }
+};
+
 function destroy () { if (canvas) canvas.remove(); };
+function isFullscreen () { return !!document.mozFullScreenElement; };
+
+function enterFullscreen () {
+  vrEffect.setFullScreen(true);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  canvas.mozRequestPointerLock();
+  safeToRenderStereo = true;
+};
+
+function exitFullscreen () {
+  if (!isFullscreen()) {
+    fixUpCanvas();
+    camera.aspect = canvas.width / canvas.height;
+    camera.updateProjectionMatrix();
+    safeToRenderStereo = false;
+  }
+};
 
 // TODO: dirty hack, remove
 function fixUpCanvas () {

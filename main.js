@@ -6,25 +6,24 @@ var debounce = require('debounce');
 
 var parser = new DOMParser;
 var ctx = {
-  rsc: null,
   gui: null,
   raf: null,
-  doc: null,
 };
 
 var counter = 0;
 function rebuild () {
+  console.log('rebuuild!');
   if (mirror.writeBackCausedUpdate()) return;
   destroyCtx();
   var content = mirror.doc.getValue();
-  ctx.doc = parser.parseFromString(content, 'application/xml');
+  var doc = parser.parseFromString(content, 'application/xml');
   // Start descent from the scene tag, not the XMLDocument parent
-  if (!ctx.doc.children.length) throw new Error('no child nodes');
+  if (!doc.children.length) throw new Error('no child nodes');
   // TODO: this could be nicer
-  mirror.cb = mirror.writeBack(ctx.doc);
+  mirror.cb = mirror.writeBack(doc);
   var scene = rend.initScene();
   ctx.gui = ui.buildUI();
-  recursiveDescend(ctx.doc.children[0], scene, ctx.gui);
+  recursiveDescend(doc.children[0], scene, ctx.gui);
   (function render () {
     ctx.raf = requestAnimationFrame(render);
     rend.render();
@@ -70,7 +69,6 @@ function recursiveDescend (node, scene, gui) {
    }
 };
 
-mirror.doc.on('update', debounce(rebuild, 1000));
+mirror.doc.on('changes', debounce(rebuild, 1000));
 rebuild();
-document.body.style.margin = 0;
 
