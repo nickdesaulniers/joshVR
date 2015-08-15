@@ -31,6 +31,13 @@ function initRenderer (canvas) {
   renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
   renderer.setSize(canvas.width, canvas.height);
   renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setClearColor(0x9DEBE9);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMapType = THREE.PCFSoftShadowMap;
+  renderer.autoClearDepth = false;
+  renderer.autoClearStencil = false;
+  renderer.sortObjects = false;
+  renderer.autoUpdateObjects = false;
 };
 
 function initVR (renderer, camera) {
@@ -40,8 +47,9 @@ function initVR (renderer, camera) {
 
 function initLights (scene) {
   scene.add(new THREE.AmbientLight(0xBBBBBB));
-  var light = new THREE.PointLight(0xFFFFFF, 1, 100);
+  var light = new THREE.SpotLight(0xFFFFFF, 1, 100);
   light.position.set(50, 50, 50);
+  light.castShadow = true;
   scene.add(light);
 };
 
@@ -55,6 +63,8 @@ function initFloor () {
     map: texture,
   });
   var mesh = new THREE.Mesh(geometry, material);
+  mesh.castShadow = false;
+  mesh.receiveShadow = true;
   scene.add(mesh);
 };
 
@@ -69,6 +79,8 @@ function addToScene (scene, node) {
   }
   var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
   var mesh = new THREE.Mesh(geometry, material);
+  mesh.castShadow = true;
+  mesh.receiveShadow = false;
   mesh.node = node;
   scene.add(mesh);
   return mesh;
