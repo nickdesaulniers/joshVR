@@ -33,7 +33,7 @@ function initRenderer (canvas) {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setClearColor(0x9DEBE9);
   renderer.shadowMap.enabled = true;
-  renderer.shadowMapType = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.autoClearDepth = false;
   renderer.autoClearStencil = false;
   renderer.sortObjects = false;
@@ -73,7 +73,7 @@ function addToScene (scene, node) {
   if (node.tagName === 'cube') {
     geometry = new THREE.BoxGeometry(1, 1, 1);
   } else if (node.tagName === 'sphere') {
-    geometry = new THREE.SphereGeometry(0.5);
+    geometry = new THREE.SphereBufferGeometry(0.5);
   } else {
     throw new Error('unrecognized type');
   }
