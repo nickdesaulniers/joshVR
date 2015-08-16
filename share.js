@@ -28,9 +28,6 @@ function getRateLimitInfoFromHeaders (xhr) {
 
 function createLoadShareButtons (onLoad, onShare) {
   var div = document.createElement('div');
-  div.style.position = 'fixed';
-  div.style.bottom = '10px';
-  div.style.zIndex = 3;
   div.id = 'share';
   var load = document.createElement('button');
   load.textContent = 'load';
@@ -40,6 +37,13 @@ function createLoadShareButtons (onLoad, onShare) {
   share.textContent = 'share'
   share.addEventListener('click', onShare);
   div.appendChild(share);
+  var a = document.createElement('a');
+  a.href = 'https://gist.github.com/search?utf8=%E2%9C%93&q=joshVR+filename%3AjoshVR.xml+anon%3Atrue+language%3Axml';
+  a.textContent = 'Search for more'
+  div.appendChild(a);
+  var p = document.createElement('p');
+  p.textContent = '. ';
+  div.appendChild(p);
   document.body.appendChild(div);
 };
 
@@ -59,17 +63,9 @@ function info (url, rateLimit, rateLimitTotal) {
   var a = document.createElement('a');
   a.href = url;
   a.textContent = url;
-  a.style.color = 'orange';
   p.appendChild(a);
   p.appendChild(document.createTextNode(', ' + rateLimit + ' / ' + rateLimitTotal +
     ' shares left this hour. '));
-  p.style.display = 'inline';
-  p.style.color = 'yellow';
-  var a2 = document.createElement('a');
-  a2.href = 'https://gist.github.com/search?utf8=%E2%9C%93&q=joshVR+filename%3AjoshVR.xml+anon%3Atrue+language%3Axml';
-  a2.textContent = 'Search for more.'
-  a2.style.color = 'orange';
-  p.appendChild(a2);
   share.appendChild(p);
 };
 

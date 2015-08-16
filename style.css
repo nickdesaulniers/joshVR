@@ -1,0 +1,46 @@
+html, body, .flex, #leftColumn {
+  height: 100%;
+  margin: 0;
+}
+
+.CodeMirror {
+  height: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex > div {
+  flex: 1;
+  overflow: hidden;
+}
+
+canvas {
+  cursor: pointer;
+}
+
+#share {
+  position: fixed;
+  bottom: 10px;
+  z-index: 3;
+  font-family: monospace;
+}
+
+#share button {
+  font-family: monospace;
+}
+
+#share a {
+  color: #9effff;
+}
+
+#share a:hover {
+  color: #66d9ef;
+}
+
+#share p {
+  color: #e6db74;
+  display: inline;
+}
+

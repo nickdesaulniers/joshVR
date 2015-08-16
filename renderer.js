@@ -16,7 +16,6 @@ function initCanvas () {
   canvas = document.createElement('canvas');
   canvas.height = window.innerHeight;
   canvas.width = window.innerWidth * 0.5;
-  canvas.style.verticalAlign = 'top';
   canvas.addEventListener('click', enterFullscreen);
   document.addEventListener('mozfullscreenchange', exitFullscreen);
   document.getElementById('rightColumn').appendChild(canvas);
