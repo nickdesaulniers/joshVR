@@ -1,7 +1,8 @@
 // watchify main.js -o dist.js -v -d
 var mirror = require('./editor');
-var rend = require('./renderer.js');
+var rend = require('./renderer');
 var ui = require('./controls');
+var share = require('./share');
 var debounce = require('debounce');
 
 var parser = new DOMParser;
@@ -71,4 +72,9 @@ function recursiveDescend (node, scene, gui) {
 
 mirror.doc.on('changes', debounce(rebuild, 1000));
 rebuild();
+
+share.createShareButton(function () {
+  var content = mirror.doc.getValue();
+  share.post(content);
+});
 

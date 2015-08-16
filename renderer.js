@@ -53,7 +53,7 @@ function initLights (scene) {
   scene.add(light);
 };
 
-function initFloor () {
+function initFloor (scene) {
   var geometry = new THREE.CircleGeometry(100, 16);
   geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
   var texture = THREE.ImageUtils.loadTexture('checkerboard.png');
