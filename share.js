@@ -26,17 +26,20 @@ function getRateLimitInfoFromHeaders (xhr) {
   };
 };
 
-function createShareButton (cb) {
+function createLoadShareButtons (onLoad, onShare) {
   var div = document.createElement('div');
   div.style.position = 'fixed';
   div.style.bottom = '10px';
   div.style.zIndex = 3;
-  //div.style.border = '1px solid yellow';
   div.id = 'share';
-  var button = document.createElement('button');
-  button.textContent = 'share'
-  button.addEventListener('click', cb);
-  div.appendChild(button);
+  var load = document.createElement('button');
+  load.textContent = 'load';
+  load.addEventListener('click', onLoad);
+  div.appendChild(load);
+  var share = document.createElement('button');
+  share.textContent = 'share'
+  share.addEventListener('click', onShare);
+  div.appendChild(share);
   document.body.appendChild(div);
 };
 
@@ -72,6 +75,6 @@ function info (url, rateLimit, rateLimitTotal) {
 
 module.exports = {
   post: post,
-  createShareButton: createShareButton,
+  createLoadShareButtons: createLoadShareButtons,
 };
 

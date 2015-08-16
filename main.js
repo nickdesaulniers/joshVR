@@ -13,7 +13,6 @@ var ctx = {
 
 var counter = 0;
 function rebuild () {
-  console.log('rebuuild!');
   if (mirror.writeBackCausedUpdate()) return;
   destroyCtx();
   var content = mirror.doc.getValue();
@@ -49,7 +48,6 @@ function destroyCtx () {
 
 // pre order depth first
 function recursiveDescend (node, scene, gui) {
-   //console.log(node, node.tagName);
    // TODO: DRY
    if (node.tagName === 'cube') {
      var mesh = rend.addToScene(scene, node);
@@ -73,7 +71,13 @@ function recursiveDescend (node, scene, gui) {
 mirror.doc.on('changes', debounce(rebuild, 1000));
 rebuild();
 
-share.createShareButton(function () {
+var xhr = new XMLHttpRequest;
+share.createLoadShareButtons(function () {
+  var url = prompt('Please enter URL of raw Github Gist');
+  xhr.open('get', url);
+  xhr.onload = function () { mirror.doc.setValue(xhr.response); };
+  xhr.send();
+}, function () {
   var content = mirror.doc.getValue();
   share.post(content);
 });
