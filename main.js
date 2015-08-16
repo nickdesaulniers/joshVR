@@ -48,21 +48,12 @@ function destroyCtx () {
 
 // pre order depth first
 function recursiveDescend (node, scene, gui) {
-   // TODO: DRY
-   if (node.tagName === 'cube') {
-     var mesh = rend.addToScene(scene, node);
-     gui = gui.addFolder(node.tagName + counter++);
-     ui.addTransforms(gui, node, mesh, mirror.cb);
-   } else if (node.tagName === 'sphere') {
-     var mesh = rend.addToScene(scene, node);
-     gui = gui.addFolder(node.tagName + counter++);
-     ui.addTransforms(gui, node, mesh, mirror.cb);
-   } else if (node.tagName === 'group') {
-     var group = rend.createGroup(scene, node);
-     scene = group;
-     gui = gui.addFolder(node.tagName + counter++);
-     ui.addTransforms(gui, node, group, mirror.cb);
+   var mesh = rend.addToScene(scene, node);
+   if (node.tagName === 'group') {
+     scene = mesh;
    }
+   gui = gui.addFolder(node.tagName + counter++);
+   ui.addTransforms(gui, node, mesh, mirror.cb);
    for (var i = 0, len = node.children.length; i < len; ++i) {
      recursiveDescend(node.children[i], scene, gui);
    }

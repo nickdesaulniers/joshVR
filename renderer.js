@@ -69,10 +69,14 @@ function initFloor (scene) {
 
 function addToScene (scene, node) {
   var geometry;
-  if (node.tagName === 'cube') {
+  if (node.tagName === 'group') {
+    return createGroup(scene, node);
+  } else if (node.tagName === 'cube') {
     geometry = new THREE.BoxGeometry(1, 1, 1);
   } else if (node.tagName === 'sphere') {
     geometry = new THREE.SphereBufferGeometry(0.5);
+  } else if (node.tagName === 'scene') {
+    return;
   } else {
     throw new Error('unrecognized type');
   }
@@ -149,7 +153,6 @@ function fixUpCanvas () {
 module.exports = {
   initScene: initScene,
   addToScene: addToScene,
-  createGroup: createGroup,
   render: render,
   destroy: destroy,
   fixUpCanvas: fixUpCanvas,
