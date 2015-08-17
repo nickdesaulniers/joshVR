@@ -51,3 +51,7 @@ Click OK to have your currently scene replaced witht he contents of the gist.  T
 ##Experience
 Click on the canvas to enter fullscreen+pointerlock.  Plug in a VR headset, fire up Firefox, and grab the [VR addon](http://mozvr.com/downloads/).
 ![](screenshots/12.png)
+
+Move yor head around, turn from side to side, roll, look up and down, and move around within the front facing position sensor's frustum.  Click this screenshot for video!
+
+[![](screenshots/13.png)](https://vimeo.com/136548758)
