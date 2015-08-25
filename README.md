@@ -8,6 +8,10 @@ To hack on this tool, simply install the Node dependencies:
 
     npm i
 
+To run the file watchers for the build scripts:
+
+    npm start
+
 ##Create
 Describe your scene using primitives (currently only cubes and spheres) and groups to describe a scene hierarchy.
 ![edit](screenshots/1.png)

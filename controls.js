@@ -1,3 +1,5 @@
+var dat = require('dat-gui');
+
 function buildUI () { return new dat.GUI(); };
 
 // the order is: 1. display name in dat.gui, 2. property for three.js,
