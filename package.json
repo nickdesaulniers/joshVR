@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "debounce": "^1.0.0"
+    "debounce": "^1.0.0",
+    "three-vr-dev": "^1.0.0"
   }
 }
