@@ -8,9 +8,13 @@ To hack on this tool, simply install the Node dependencies:
 
     npm i
 
-To run the file watchers for the build scripts:
+To run the development server for the static files and the file watchers for the build scripts:
 
     npm start
+
+##Production
+
+Do not run this in production yet, as all the `node_modules` directories are served. We will need to introduce a separate `dist/` directory with only the necessary files copied over.
 
 ##Create
 Describe your scene using primitives (currently only cubes and spheres) and groups to describe a scene hierarchy.

@@ -9,12 +9,13 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "npm run watch",
-    "watch": "watchify main.js -o dist.js -v -d",
-    "build": "node_modules/watchify/node_modules/.bin/browserify main.js -o dist.js",
-    "postinstall": "npm run build"
+    "dev": "npm run server",
+    "server": "npm run build && wzrd main.js:dist.js --port 8080 | garnish",
+    "build": "browserify main.js -o dist.js"
   },
   "devDependencies": {
-    "watchify": "^3.3.1"
+    "browserify": "^11.0.1",
+    "garnish": "^2.3.0",
+    "wzrd": "^1.3.1"
   }
 }
