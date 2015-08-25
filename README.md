@@ -2,6 +2,12 @@
 Easily create 3D static hierarchies, experience them in VR, and share with your
 friends.
 
+##Local Development
+
+To hack on this tool, simply install the Node dependencies:
+
+    npm i
+
 ##Create
 Describe your scene using primitives (currently only cubes and spheres) and groups to describe a scene hierarchy.
 ![edit](screenshots/1.png)
