@@ -1,6 +1,20 @@
 {
+  "name": "joshVR",
+  "private": true,
   "dependencies": {
+    "codemirror": "^5.5.0",
+    "dat-gui": "^0.5.0",
     "debounce": "^1.0.0",
     "three-vr-dev": "^1.0.0"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "npm run watch",
+    "watch": "watchify main.js -o dist.js -v -d",
+    "build": "node_modules/watchify/node_modules/.bin/browserify main.js -o dist.js",
+    "postinstall": "npm run build"
+  },
+  "devDependencies": {
+    "watchify": "^3.3.1"
   }
 }
