@@ -9,13 +9,12 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "npm run server",
-    "server": "npm run build && wzrd main.js:dist.js --port 8080 | garnish",
+    "dev": "npm run build && budo main.js:dist.js --verbose --live --port 8080 | garnish",
     "build": "browserify main.js -o dist.js"
   },
   "devDependencies": {
     "browserify": "^11.0.1",
-    "garnish": "^2.3.0",
-    "wzrd": "^1.3.1"
+    "budo": "^4.2.1",
+    "garnish": "^2.3.0"
   }
 }
