@@ -1,3 +1,4 @@
+var debounce = require('debounce');
 var renderer, scene, camera, canvas, vrEffect, vrControls;
 var cameraPosition = new THREE.Vector3(0, 1, 5);
 
@@ -18,6 +19,7 @@ function initCanvas () {
   canvas.width = window.innerWidth * 0.5;
   canvas.addEventListener('click', enterFullscreen);
   document.addEventListener('mozfullscreenchange', exitFullscreen);
+  window.addEventListener('resize', debounce(handleResize, 100));
   document.getElementById('rightColumn').appendChild(canvas);
 };
 
@@ -121,10 +123,14 @@ function enterFullscreen () {
 
 function exitFullscreen () {
   if (isFullscreen()) return;
-  fixUpCanvas();
-  resetCamera(camera);
+  handleResize();
   safeToRenderStereo = false;
 };
+
+function handleResize() {
+  fixUpCanvas();
+  resetCamera(camera);
+}
 
 function resetCamera (camera) {
   camera.position.copy(cameraPosition);
