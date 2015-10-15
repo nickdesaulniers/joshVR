@@ -4,6 +4,7 @@ var defaultText = [
   '    <cube scaleX="2.75" translateY="1.0"/>',
   '    <sphere translateX="1.0"/>',
   '    <sphere translateX="-1.0"/>',
+  '    <cylinder translateX="3.0"/>',
   '  </group>',
   '</scene>'
 ].join('\n');

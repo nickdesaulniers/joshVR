@@ -77,6 +77,8 @@ function addToScene (scene, node) {
     geometry = new THREE.BoxGeometry(1, 1, 1);
   } else if (node.tagName === 'sphere') {
     geometry = new THREE.SphereBufferGeometry(0.5);
+  } else if (node.tagName == 'cylinder'){
+    geometry = new THREE.CylinderGeometry(1, 1, 1, 32);
   } else if (node.tagName === 'scene') {
     return;
   } else {
