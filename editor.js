@@ -5,6 +5,7 @@ var defaultText = [
   '    <sphere translateX="1.0"/>',
   '    <sphere translateX="-1.0"/>',
   '    <cylinder translateX="3.0"/>',
+  '    <cone translateX="-3.0"/>',
   '  </group>',
   '</scene>'
 ].join('\n');
