@@ -88,7 +88,8 @@ function addToScene (scene, node) {
   } else {
     throw new Error('unrecognized type');
   }
-  var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+  var geometryColor = node.getAttribute('color') || '#A800FF';
+  var material = new THREE.MeshLambertMaterial( { color: geometryColor });
   var mesh = new THREE.Mesh(geometry, material);
   mesh.castShadow = true;
   mesh.receiveShadow = false;
