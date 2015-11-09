@@ -77,12 +77,19 @@ function addToScene (scene, node) {
     geometry = new THREE.BoxGeometry(1, 1, 1);
   } else if (node.tagName === 'sphere') {
     geometry = new THREE.SphereBufferGeometry(0.5);
+  } else if (node.tagName === 'cylinder'){
+    geometry = new THREE.CylinderGeometry(1, 1, 1, 32);
+  } else if (node.tagName === 'cone'){
+    geometry = new THREE.CylinderGeometry(0, 1, 2, 32);
+  } else if (node.tagName === 'pyramid') {
+    geometry = new THREE.CylinderGeometry(0, 1, 1, 4, 1);
   } else if (node.tagName === 'scene') {
     return;
   } else {
     throw new Error('unrecognized type');
   }
-  var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+  var geometryColor = node.getAttribute('color') || '#A800FF';
+  var material = new THREE.MeshLambertMaterial( { color: geometryColor });
   var mesh = new THREE.Mesh(geometry, material);
   mesh.castShadow = true;
   mesh.receiveShadow = false;
