@@ -1,3 +1,4 @@
+var debounce = require('debounce');
 var renderer, scene, camera, canvas, vrEffect, vrControls;
 var cameraPosition = new THREE.Vector3(0, 1, 5);
 
@@ -18,6 +19,7 @@ function initCanvas () {
   canvas.width = window.innerWidth * 0.5;
   canvas.addEventListener('click', enterFullscreen);
   document.addEventListener('mozfullscreenchange', exitFullscreen);
+  window.addEventListener('resize', debounce(handleResize, 100));
   document.getElementById('rightColumn').appendChild(canvas);
 };
 
@@ -75,12 +77,19 @@ function addToScene (scene, node) {
     geometry = new THREE.BoxGeometry(1, 1, 1);
   } else if (node.tagName === 'sphere') {
     geometry = new THREE.SphereBufferGeometry(0.5);
+  } else if (node.tagName === 'cylinder'){
+    geometry = new THREE.CylinderGeometry(1, 1, 1, 32);
+  } else if (node.tagName === 'cone'){
+    geometry = new THREE.CylinderGeometry(0, 1, 2, 32);
+  } else if (node.tagName === 'pyramid') {
+    geometry = new THREE.CylinderGeometry(0, 1, 1, 4, 1);
   } else if (node.tagName === 'scene') {
     return;
   } else {
     throw new Error('unrecognized type');
   }
-  var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+  var geometryColor = node.getAttribute('color') || '#A800FF';
+  var material = new THREE.MeshLambertMaterial( { color: geometryColor });
   var mesh = new THREE.Mesh(geometry, material);
   mesh.castShadow = true;
   mesh.receiveShadow = false;
@@ -121,10 +130,14 @@ function enterFullscreen () {
 
 function exitFullscreen () {
   if (isFullscreen()) return;
-  fixUpCanvas();
-  resetCamera(camera);
+  handleResize();
   safeToRenderStereo = false;
 };
+
+function handleResize() {
+  fixUpCanvas();
+  resetCamera(camera);
+}
 
 function resetCamera (camera) {
   camera.position.copy(cameraPosition);

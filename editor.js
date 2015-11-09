@@ -1,9 +1,12 @@
 var defaultText = [
   '<scene>',
   '  <group translateY="1.0" rotateY="0.78">',
-  '    <cube scaleX="2.75" translateY="1.0"/>',
-  '    <sphere translateX="1.0"/>',
+  '    <cube scaleX="2.75" translateY="1.0" color="#0000FF"/>',
+  '    <sphere translateX="1.0" color="red"/>',
   '    <sphere translateX="-1.0"/>',
+  '    <cylinder translateX="3.0"/>',
+  '    <cone translateX="-3.0"/>',
+  '    <pyramid translateX="2.0" translateY="2.5"/>',
   '  </group>',
   '</scene>'
 ].join('\n');

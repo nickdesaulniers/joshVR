@@ -1,4 +1,3 @@
-// watchify main.js -o dist.js -v -d
 var mirror = require('./editor');
 var rend = require('./renderer');
 var ui = require('./controls');

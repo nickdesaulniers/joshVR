@@ -1,5 +1,20 @@
 {
+  "name": "joshVR",
+  "private": true,
   "dependencies": {
-    "debounce": "^1.0.0"
+    "codemirror": "^5.5.0",
+    "dat-gui": "^0.5.0",
+    "debounce": "^1.0.0",
+    "three-vr-dev": "^1.0.0"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "npm run build && budo main.js:dist.js --verbose --live --port 8080 | garnish",
+    "build": "browserify main.js -o dist.js"
+  },
+  "devDependencies": {
+    "browserify": "^11.0.1",
+    "budo": "^4.2.1",
+    "garnish": "^2.3.0"
   }
 }
