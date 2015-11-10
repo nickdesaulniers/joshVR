@@ -2,9 +2,9 @@ var mirror = require('./editor');
 var rend = require('./renderer');
 var ui = require('./controls');
 var share = require('./share');
+var parse = require('./parser');
 var debounce = require('debounce');
 
-var parser = new DOMParser;
 var ctx = {
   gui: null,
   raf: null,
@@ -15,14 +15,12 @@ function rebuild () {
   if (mirror.writeBackCausedUpdate()) return;
   destroyCtx();
   var content = mirror.doc.getValue();
-  var doc = parser.parseFromString(content, 'application/xml');
-  // Start descent from the scene tag, not the XMLDocument parent
-  if (!doc.children.length) throw new Error('no child nodes');
+  var doc = parse(content);
   // TODO: this could be nicer
   mirror.cb = mirror.writeBack(doc);
   var scene = rend.initScene();
   ctx.gui = ui.buildUI();
-  recursiveDescend(doc.children[0], scene, ctx.gui);
+  recursiveDescend(doc, scene, ctx.gui);
   (function render () {
     ctx.raf = requestAnimationFrame(render);
     rend.render();

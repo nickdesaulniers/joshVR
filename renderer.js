@@ -1,6 +1,10 @@
 var debounce = require('debounce');
+var parse = require('./parser');
+var meshHelper = require('./mesh_helper');
+
 var renderer, scene, camera, canvas, vrEffect, vrControls;
 var cameraPosition = new THREE.Vector3(0, 1, 5);
+var portals = [];
 
 function initScene () {
   initCanvas();
@@ -32,7 +36,7 @@ function initRenderer (canvas) {
   renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
   renderer.setSize(canvas.width, canvas.height);
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setClearColor(0x9DEBE9);
+  renderer.setClearColor(0x9DEBE9, 0);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.autoClearDepth = false;
@@ -69,27 +73,97 @@ function initFloor (scene) {
   scene.add(mesh);
 };
 
-function addToScene (scene, node) {
-  var geometry;
-  if (node.tagName === 'group') {
-    return createGroup(scene, node);
-  } else if (node.tagName === 'cube') {
-    geometry = new THREE.BoxGeometry(1, 1, 1);
-  } else if (node.tagName === 'sphere') {
-    geometry = new THREE.SphereBufferGeometry(0.5);
-  } else if (node.tagName === 'cylinder'){
-    geometry = new THREE.CylinderGeometry(1, 1, 1, 32);
-  } else if (node.tagName === 'cone'){
-    geometry = new THREE.CylinderGeometry(0, 1, 2, 32);
-  } else if (node.tagName === 'pyramid') {
-    geometry = new THREE.CylinderGeometry(0, 1, 1, 4, 1);
-  } else if (node.tagName === 'scene') {
-    return;
+function determineGeometry (tagName) {
+  if (tagName === 'cube') {
+    return new THREE.BoxGeometry(1, 1, 1);
+  } else if (tagName === 'sphere') {
+    return new THREE.SphereBufferGeometry(0.5);
+  } else if (tagName === 'cylinder'){
+    return new THREE.CylinderGeometry(1, 1, 1, 32);
+  } else if (tagName === 'cone'){
+    return new THREE.CylinderGeometry(0, 1, 2, 32);
+  } else if (tagName === 'pyramid') {
+    return new THREE.CylinderGeometry(0, 1, 1, 4, 1);
+  } else if (tagName === 'portal') {
+    return new THREE.CircleGeometry(2, 36, 0, 2 * Math.PI);
   } else {
     throw new Error('unrecognized type');
   }
+};
+
+function PortalInfo (scene, camera, texture) {
+  this.scene = scene;
+  this.camera = camera;
+  this.texture = texture;
+};
+
+function buildPortal (src) {
+  if (!src) return;
+  var rtTexture = new THREE.WebGLRenderTarget(
+    canvas.width, canvas.height,
+    {
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.NearestFilter,
+    }
+  );
+
+  var portalScene = new THREE.Scene();
+  initLights(portalScene);
+  initFloor(portalScene);
+  var portalCamera = new THREE.PerspectiveCamera(75,
+    canvas.width / canvas.height, 0.1, 1000);
+  portalCamera.position.copy(cameraPosition);
+  var xhr = new XMLHttpRequest;
+  xhr.open('get', src);
+  function recusivelyAddToScene (scene, doc) {
+    var mesh = addToScene(scene, doc);
+    if (doc.tagName === 'group') {
+      scene = mesh;
+    }
+    meshHelper.forEachAttribute(doc, function (attr) {
+      var props = meshHelper.getPropertiesFromAttrName(attr.name);
+      if (props.length > 1) {
+        meshHelper.setDefaultValue(mesh, props, +attr.value);
+      }
+    });
+    for (var i = 0, len = doc.children.length; i < len; ++i) {
+      recusivelyAddToScene(scene, doc.children[i]);
+    }
+  };
+  xhr.onload = function () {
+    var doc = parse(xhr.response);
+    recusivelyAddToScene(portalScene, doc);
+    portals.push(new PortalInfo(portalScene, portalCamera, rtTexture));
+  };
+  xhr.send();
+  var material = new THREE.MeshBasicMaterial({
+    map: rtTexture,
+    //transparent: true,
+  });
+  return material;
+};
+
+function getDefaultMaterial (node) {
   var geometryColor = node.getAttribute('color') || '#A800FF';
-  var material = new THREE.MeshLambertMaterial( { color: geometryColor });
+  return new THREE.MeshLambertMaterial({ color: geometryColor });
+};
+
+function determineMaterial (node) {
+  if (node.tagName === 'portal') {
+    return buildPortal(node.getAttribute('src')) || getDefaultMaterial(node);
+  } else {
+    return getDefaultMaterial(node);
+  }
+};
+
+function addToScene (scene, node) {
+  if (node.tagName === 'group') {
+    return createGroup(scene, node);
+  } else if (node.tagName === 'scene') {
+    return;
+  }
+  var geometry = determineGeometry(node.tagName);
+  var material = determineMaterial(node);
   var mesh = new THREE.Mesh(geometry, material);
   mesh.castShadow = true;
   mesh.receiveShadow = false;
@@ -105,13 +179,41 @@ function createGroup (scene, node) {
   return group;
 };
 
+function adjustPortalCamera (sceneCamera, portalCamera) {
+  var angle = Math.tan(sceneCamera.position.x /
+    (sceneCamera.position.z + portalCamera.position.z));
+  var opposite = angle * portalCamera.position.z;
+  portalCamera.position.add(new THREE.Vector3(opposite, 0, 0));
+};
+
+function renderPortals (renderer, isStereo) {
+  var clone = new THREE.PerspectiveCamera();
+  if (portals.length) {
+    for (var i = 0; i < portals.length; ++i) {
+      var portal = portals[i];
+      if (isStereo) {
+        //adjustPortalCamera(camera, portal.camera);
+        clone.copy(portal.camera);
+        adjustPortalCamera(camera, clone);
+      } else {
+        //portalCamera.position.copy(cameraPosition);
+      }
+      renderer.clear();
+      renderer.render(portal.scene, clone, portal.texture, true);
+    }
+  }
+};
+
 var safeToRenderStereo = false;
 function render () {
   if (safeToRenderStereo) {
     vrControls.update();
     adjustCamera(camera);
+    //renderPortals(vrEffect, true);
+    renderPortals(renderer, true);
     vrEffect.render(scene, camera);
   } else {
+    renderPortals(renderer, false);
     renderer.render(scene, camera);
   }
 };
